@@ -476,6 +476,7 @@ class MultiAgentOrchestrator:
         self.llm_recommendation_agent = LLMRecommendationAgent()
         self.multi_ai_comparison_agent = MultiAIComparisonAgent()
         self.prescription_agent = PrescriptionAgent()
+        self.medicines_agent = MedicinesAgent()
         self.synthesis_agent = SynthesisAgent()
         self.agent_results: List[AgentResult] = []
     
@@ -564,12 +565,12 @@ class MultiAgentOrchestrator:
                     cleaned_params,
                     patient_context
                 ),
-                timeout=15.0  # Reduced to 15s for faster fallback
+                timeout=10.0  # 10s for faster fallback
             )
             self.agent_results.append(llm_result)
             recommendations = llm_result.data or []
         except asyncio.TimeoutError:
-            self.logger.warning("LLM timeout (15s), using fast fallback")
+            self.logger.warning("LLM timeout (10s), using fast fallback")
             recommendations = self._generate_quick_fallback_recommendations(cleaned_params, interpretations, risks)
         
         # Stage 6: Run prescriptions, medicines, and synthesis in PARALLEL (they don't depend on each other)
@@ -605,7 +606,7 @@ class MultiAgentOrchestrator:
                 try:
                     return await asyncio.wait_for(
                         asyncio.to_thread(
-                            MedicinesAgent().execute,
+                            self.medicines_agent.execute,
                             interpretations,
                             risks,
                             cleaned_params
@@ -842,33 +843,45 @@ class MultiAgentOrchestrator:
             recommendations = self._generate_quick_fallback_recommendations(cleaned_params, interpretations, risks)
             all_ai_results = {}
         
-        # Stage 6: Generate prescriptions
-        prescription_result = self.prescription_agent.execute(
-            interpretations,
-            risks,
-            cleaned_params
-        )
-        self.agent_results.append(prescription_result)
+        # Stage 6: Run prescriptions, medicines, and synthesis in PARALLEL
+        try:
+            prescription_task = asyncio.create_task(
+                asyncio.to_thread(self.prescription_agent.execute, interpretations, risks, cleaned_params)
+            )
+            medicines_task = asyncio.create_task(
+                asyncio.to_thread(self.medicines_agent.execute, interpretations, risks, cleaned_params)
+            )
+            synthesis_task = asyncio.create_task(
+                asyncio.to_thread(self.synthesis_agent.execute, cleaned_params, interpretations, risks, recommendations)
+            )
+            
+            prescription_result, medicines_result, synthesis_result = await asyncio.wait_for(
+                asyncio.gather(prescription_task, medicines_task, synthesis_task),
+                timeout=15.0
+            )
+        except asyncio.TimeoutError:
+            self.logger.warning("Stage 6 parallel timeout, using fallbacks")
+            from src.recommendation.recommendation_generator import generate_prescriptions, generate_medicines
+            prescription_result = AgentResult(self.prescription_agent.name, False,
+                generate_prescriptions(interpretations, risks, cleaned_params), "Timeout")
+            medicines_result = AgentResult(self.medicines_agent.name, False,
+                generate_medicines(interpretations, risks, cleaned_params), "Timeout")
+            synthesis_result = AgentResult(self.synthesis_agent.name, False,
+                f"Analysis of {len(cleaned_params)} parameters with {len(risks)} identified risks.", "Timeout")
+        except Exception as e:
+            self.logger.error(f"Stage 6 error: {str(e)}")
+            from src.recommendation.recommendation_generator import generate_prescriptions, generate_medicines
+            prescription_result = AgentResult(self.prescription_agent.name, False,
+                generate_prescriptions(interpretations, risks, cleaned_params), str(e))
+            medicines_result = AgentResult(self.medicines_agent.name, False,
+                generate_medicines(interpretations, risks, cleaned_params), str(e))
+            synthesis_result = AgentResult(self.synthesis_agent.name, False,
+                f"Analysis of {len(cleaned_params)} parameters with {len(risks)} identified risks.", str(e))
+        
+        self.agent_results.extend([prescription_result, medicines_result, synthesis_result])
+        
         prescriptions = prescription_result.data or []
-        
-        # Stage 6b: Generate medicines and supplements suggestions
-        medicines_agent = MedicinesAgent()
-        medicines_result = medicines_agent.execute(
-            interpretations,
-            risks,
-            cleaned_params
-        )
-        self.agent_results.append(medicines_result)
         medicines = medicines_result.data or []
-        
-        # Stage 7: Synthesize findings
-        synthesis_result = self.synthesis_agent.execute(
-            cleaned_params,
-            interpretations,
-            risks,
-            recommendations
-        )
-        self.agent_results.append(synthesis_result)
         synthesis = synthesis_result.data or ""
         
         overall_time = time.time() - overall_start
