@@ -1,0 +1,33 @@
+name: Deploy to Vercel on Push
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Deploy to Vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          npm install -g vercel
+          vercel --token $VERCEL_TOKEN --prod
+        if: env.VERCEL_TOKEN != ''
+      
+      - name: Notify Success
+        if: success()
+        run: echo "✅ Deployment to Vercel successful!"
+      
+      - name: Vercel Auto Import Info
+        run: |
+          echo "💡 Vercel Auto-Deployment:"
+          echo "Visit https://vercel.com/import and connect this GitHub repo"
+          echo "Vercel will auto-deploy on every push to main"
