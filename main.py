@@ -24,6 +24,9 @@ except ImportError as e:
     logger.error(f"Failed to load API: {e}")
     sys.exit(1)
 
+# Ensure app is available at module level for deployment platforms
+__all__ = ["app"]
+
 if __name__ == "__main__":
     host = os.getenv("HOST", "0.0.0.0")
     port = int(os.getenv("PORT", "8000"))
