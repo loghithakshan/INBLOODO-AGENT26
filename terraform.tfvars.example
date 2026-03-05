@@ -1,0 +1,26 @@
+# Terraform Variables Example - Copy to terraform.tfvars and fill in your values
+# IMPORTANT: Add terraform.tfvars to .gitignore (never commit API keys!)
+
+project_id = "your-google-cloud-project-id"
+region = "us-central1"
+service_name = "blood-report-ai"
+
+# Optional: Set custom resources
+memory = "512Mi"
+cpu = "1"
+port = "8000"
+timeout_seconds = 3600
+min_instances = 0
+max_instances = 100
+
+# API Keys - NEVER commit these!
+# Get your keys from:
+# - Google Gemini: https://aistudio.google.com/app/apikey
+# - OpenAI: https://platform.openai.com/account/api-keys
+# - Anthropic: https://console.anthropic.com/account/keys
+# - Grok: https://console.x.ai/
+
+gemini_api_key = "your-gemini-api-key"
+openai_api_key = "your-openai-api-key"
+anthropic_api_key = "your-anthropic-api-key"
+grok_api_key = "your-grok-api-key"
