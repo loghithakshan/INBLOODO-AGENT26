@@ -47,16 +47,16 @@ python main.py
 ## 🌐 Access the Application
 
 After starting, open your browser and go to:
-- **Web Interface**: http://localhost:10000
-- **Health Check**: http://localhost:10000/health
-- **API Documentation**: http://localhost:10000/docs (development only)
+- **Web Interface**: http://localhost:8000
+- **Health Check**: http://localhost:8000/health
+- **API Documentation**: http://localhost:8000/docs
 
 ## 🔑 API Usage
 
 ### Authentication
 All API endpoints require an API key in the header:
 ```bash
-curl -H "x-api-key: your-api-key" http://localhost:10000/health
+curl -H "x-api-key: your-api-key" http://localhost:8000/health
 ```
 
 ### Analyze Blood Report (File Upload)
@@ -64,7 +64,7 @@ curl -H "x-api-key: your-api-key" http://localhost:10000/health
 curl -X POST \
   -H "x-api-key: secret" \
   -F "file=@blood_report.pdf" \
-  http://localhost:10000/analyze-report/
+  http://localhost:8000/analyze-report/
 ```
 
 ### Analyze Blood Report (JSON Data)
@@ -73,7 +73,7 @@ curl -X POST \
   -H "Content-Type: application/json" \
   -H "x-api-key: secret" \
   -d '{"hemoglobin": 12.5, "glucose": 95, "cholesterol": 180}' \
-  http://localhost:10000/analyze-json/
+  http://localhost:8000/analyze-json/
 ```
 
 ## 🐳 Docker Deployment

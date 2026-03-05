@@ -31,11 +31,6 @@ anthropic
 openai-agents
 
 # Authentication & Security
-passlib[bcrypt]
+bcrypt
 pyjwt
 email-validator
-
-# OAuth2 Social Login
-authlib
-httpx
-itsdangerous
