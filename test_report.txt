@@ -1,8 +1,0 @@
-﻿Hemoglobin: 13.5 g/dL
-Glucose: 95 mg/dL
-Cholesterol: 185 mg/dL
-LDL: 110 mg/dL
-HDL: 50 mg/dL
-Triglycerides: 120 mg/dL
-Creatinine: 0.9 mg/dL
-Potassium: 4.2 mEq/L
