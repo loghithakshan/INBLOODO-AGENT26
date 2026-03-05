@@ -4,8 +4,6 @@
     "builder": "dockerfile"
   },
   "deploy": {
-    "startCommand": "python main.py",
-    "restartPolicyType": "on-failure",
-    "restartPolicyMaxRetries": 5
+    "startCommand": "python main.py"
   }
 }
