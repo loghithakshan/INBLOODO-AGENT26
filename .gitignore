@@ -1,15 +1,85 @@
 # Virtual environments
 venv/
 .venv/
+ENV/
+env/
 
 # Python cache
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
 
 # OS files
 .DS_Store
 Thumbs.db
+.AppleDouble
+.LSOverride
 
 # Uploaded / generated data
 data/uploads/
 data/sample_report/extracted_data/
+data/easyocr_models/
+data/**/*.pth
+data/**/*.pkl
+
+# Logs and temp files
+*.log
+logs/
+tmp/
+temp/
+*.tmp
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+.settings/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Database files (local)
+*.db
+*.sqlite
+*.sqlite3
+
+# Build artifacts
+*.whl
+*.tar.gz
+
+# Vercel
+.vercel/
+
+# Cache
+.cache/
+*.cache
+.mypy_cache/
+
+# Large files
+*.mp4
+*.mov
+*.avi
+*.mkv
+
+# IDE temp files
+*.sublime-project
+*.sublime-workspace
