@@ -19,5 +19,5 @@ Path("logs").mkdir(parents=True, exist_ok=True)
 # Import the FastAPI app
 from src.api_optimized import app
 
-# Export the app for Vercel
-_app = app
+# Ensure app is available for Vercel
+__all__ = ["app"]

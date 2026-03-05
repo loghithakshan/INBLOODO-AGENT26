@@ -1,9 +1,13 @@
 {
   "version": 2,
+  "framework": "python",
   "buildCommand": "pip install -r requirements.txt",
+  "outputDirectory": ".",
   "functions": {
     "api/index.py": {
-      "runtime": "python3.11"
+      "runtime": "python3.11",
+      "memory": 3008,
+      "maxDuration": 60
     }
   },
   "routes": [
@@ -16,5 +20,8 @@
     "HOST": "0.0.0.0",
     "PORT": "8000",
     "DEBUG": "false"
+  },
+  "python": {
+    "version": "3.11"
   }
 }
