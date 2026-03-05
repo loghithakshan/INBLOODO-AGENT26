@@ -30,11 +30,11 @@ interpretation = interpret_parameters(validated_parameters)
 # 5. Model-2
 risk_patterns = analyze_patterns(validated_parameters, interpretation)
 
-# 6. Synthesis
-summary = synthesize_findings(interpretation, risk_patterns)
-
-# 7. Recommendations
+# 6. Recommendations
 recommendations = generate_recommendations(interpretation, risk_patterns)
+
+# 7. Synthesis
+summary = synthesize_findings(validated_parameters, interpretation, risk_patterns, recommendations)
 
 # 8. Final Report
 final_report = generate_report(

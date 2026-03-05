@@ -42,60 +42,80 @@ class PDFReportGenerator:
     def generate_pdf_report(self, analysis_report: dict, filename: str = "report.pdf") -> str:
         """Generate a comprehensive PDF report from analysis data."""
         
-        pdf = FPDF()
-        pdf.add_page()
-        pdf.set_font("Helvetica", "B", 16)
-        pdf.cell(0, 10, self.sanitize_text(analysis_report.get("title", "Blood Report")), ln=True, align="C")
-        
-        pdf.set_font("Helvetica", "", 12)
-        pdf.ln(10)
-        
-        # Parameters
-        if "parameters" in analysis_report:
-            pdf.set_font("Helvetica", "B", 12)
-            pdf.cell(0, 10, "Blood Parameters", ln=True)
-            pdf.set_font("Helvetica", "", 10)
+        try:
+            from fpdf import FPDF
             
-            for param in analysis_report.get("parameters", []):
-                text = f"{param.get('name', '')}: {param.get('value', '')} {param.get('unit', '')}"
-                pdf.cell(0, 8, self.sanitize_text(text), ln=True)
-        
-        # Interpretations
-        if "interpretations" in analysis_report and analysis_report["interpretations"]:
-            pdf.ln(5)
-            pdf.set_font("Helvetica", "B", 12)
-            pdf.cell(0, 10, "Interpretations", ln=True)
-            pdf.set_font("Helvetica", "", 10)
+            # Create PDF with explicit margins
+            pdf = FPDF('P', 'mm', 'A4')
+            pdf.add_page()
             
-            for interp in analysis_report.get("interpretations", []):
-                sanitized_interp = self.sanitize_text(interp)
-                pdf.multi_cell(0, 5, sanitized_interp)
-        
-        # Risk Assessment
-        if "risks" in analysis_report and analysis_report["risks"]:
-            pdf.ln(5)
-            pdf.set_font("Helvetica", "B", 12)
-            pdf.cell(0, 10, "Risk Assessment", ln=True)
-            pdf.set_font("Helvetica", "", 10)
+            # Set larger margins to avoid text overflow  
+            pdf.set_left_margin(20)
+            pdf.set_top_margin(15)
+            pdf.set_right_margin(20)
             
-            for risk in analysis_report.get("risks", []):
-                sanitized_risk = self.sanitize_text(risk)
-                pdf.multi_cell(0, 5, sanitized_risk)
-        
-        # Recommendations
-        if "recommendations" in analysis_report and analysis_report["recommendations"]:
-            pdf.ln(5)
+            # Title (smaller font)
             pdf.set_font("Helvetica", "B", 12)
-            pdf.cell(0, 10, "Recommendations", ln=True)
-            pdf.set_font("Helvetica", "", 10)
+            pdf.cell(0, 8, "BLOOD ANALYSIS REPORT", 0, 1, "C")
             
-            for rec in analysis_report.get("recommendations", []):
-                sanitized_rec = self.sanitize_text(rec)
-                pdf.multi_cell(0, 5, f"- {sanitized_rec}")
-        
-        # Save PDF
-        os.makedirs("reports", exist_ok=True)
-        filepath = os.path.join("reports", filename)
-        pdf.output(filepath)
-        
-        return filepath
+            # Timestamp
+            pdf.set_font("Helvetica", "", 9)
+            pdf.cell(0, 5, "Analysis Report", 0, 1, "L")
+            pdf.ln(2)
+            
+            # Extracted Parameters Section
+            params = analysis_report.get("extracted_parameters", {})
+            if params:
+                pdf.set_font("Helvetica", "B", 10)
+                pdf.cell(0, 5, "Blood Parameters", 0, 1)
+                pdf.set_font("Helvetica", "", 9)
+                
+                for param_name, param_value in list(params.items())[:8]:
+                    # Simplify text to avoid wrapping issues
+                    try:
+                        text = f"{param_name}: {param_value}"
+                        # Truncate if too long
+                        if len(text) > 70:
+                            text = text[:67] + "..."
+                        text = self.sanitize_text(text)
+                        pdf.cell(0, 4, text, 0, 1)
+                    except:
+                        pass
+                pdf.ln(1)
+            
+            # Recommendations Section  
+            recommendations = analysis_report.get("recommendations", [])
+            if recommendations:
+                pdf.set_font("Helvetica", "B", 10)
+                pdf.cell(0, 5, "Recommendations", 0, 1)
+                pdf.set_font("Helvetica", "", 8)
+                
+                for i, rec in enumerate(recommendations[:6], 1):
+                    try:
+                        text = f"{i}. {rec}"
+                        if len(text) > 70:
+                            text = text[:67] + "..."
+                        text = self.sanitize_text(text)
+                        pdf.cell(0, 3, text, 0, 1)
+                    except:
+                        pass
+                pdf.ln(1)
+            
+            # Analysis Summary
+            analysis_count = len(recommendations)
+            interpretations = analysis_report.get("interpretations", [])
+            interp_count = len(interpretations)
+            
+            pdf.set_font("Helvetica", "", 8)
+            summary = f"Analysis Report: {analysis_count} recommendations, {interp_count} interpretation(s)"
+            pdf.cell(0, 5, self.sanitize_text(summary), 0, 1)
+            
+            # Save PDF
+            os.makedirs("reports", exist_ok=True)
+            filepath = os.path.join("reports", filename)
+            pdf.output(filepath)
+            
+            return filepath
+            
+        except Exception as e:
+            raise Exception(f"PDF generation error: {str(e)}")

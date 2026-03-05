@@ -1694,20 +1694,20 @@
         }
 
         .api-logo {
-            width: 45px;
-            height: 45px;
+            width: 50px;
+            height: 50px;
             margin: 0 auto 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
-            font-weight: bold;
-            border-radius: 10px;
-            transition: transform 0.3s ease;
+            border-radius: 12px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .api-item:hover .api-logo {
-            transform: scale(1.1);
+            transform: scale(1.15);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
         }
 
         .api-logo.gemini {
@@ -1728,6 +1728,11 @@
         .api-logo.grok {
             background: linear-gradient(135deg, #000000 0%, #2a2a2a 100%);
             color: #00ffff;
+            box-shadow: 0 4px 12px rgba(0, 255, 255, 0.2);
+        }
+
+        .api-item:hover .api-logo.grok {
+            box-shadow: 0 6px 16px rgba(0, 255, 255, 0.3);
         }
 
         .api-logo.mock {
@@ -2090,27 +2095,47 @@
                 </div>
                 <div class="apis-grid" id="apisGrid">
                     <div class="api-item">
-                        <div class="api-logo">G</div>
+                        <div class="api-logo gemini">
+                            <svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
+                            </svg>
+                        </div>
                         <div class="api-name">Google Gemini 1.5</div>
                         <div class="api-status available">Available</div>
                     </div>
                     <div class="api-item">
-                        <div class="api-logo">O</div>
+                        <div class="api-logo openai">
+                            <svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor">
+                                <path d="M11.642 1.887a1.773 1.773 0 0 1 .716 0l9.216 2.582c.8.226 1.426.823 1.426 1.638v5.852c0 6.289-3.733 9.355-9.342 10.852a1.77 1.77 0 0 1-.632 0C3.733 20.726 0 17.66 0 11.37V6.107c0-.815.626-1.412 1.426-1.638l9.216-2.582z"/>
+                            </svg>
+                        </div>
                         <div class="api-name">OpenAI GPT-4</div>
                         <div class="api-status available">Available</div>
                     </div>
                     <div class="api-item">
-                        <div class="api-logo">C</div>
+                        <div class="api-logo claude">
+                            <svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                            </svg>
+                        </div>
                         <div class="api-name">Claude 3.5 Sonnet</div>
                         <div class="api-status available">Available</div>
                     </div>
                     <div class="api-item">
-                        <div class="api-logo">G</div>
+                        <div class="api-logo grok">
+                            <svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-13c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5z"/>
+                            </svg>
+                        </div>
                         <div class="api-name">Grok 2</div>
                         <div class="api-status available">Available</div>
                     </div>
                     <div class="api-item">
-                        <div class="api-logo">M</div>
+                        <div class="api-logo mock">
+                            <svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor">
+                                <path d="M12 2 L2 7 L2 12 C2 19.732 12 22 12 22 C12 22 22 19.732 22 12 L22 7 L12 2 M10.5 13 L7.5 10 L6 11.5 L10.5 16 L18 8.5 L16.5 7 L10.5 13"/>
+                            </svg>
+                        </div>
                         <div class="api-name">Mock AI</div>
                         <div class="api-status available">Available</div>
                     </div>

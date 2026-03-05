@@ -6,7 +6,17 @@ Test script to check agent orchestrator functionality.
 import sys
 import os
 import asyncio
+import logging
+import warnings
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
+
+# Suppress warnings and non-critical provider logs
+warnings.filterwarnings("ignore")
+logging.getLogger('src.llm.gemini_provider').setLevel(logging.CRITICAL)
+logging.getLogger('src.llm.openai_provider').setLevel(logging.CRITICAL)
+logging.getLogger('src.llm.claude_provider').setLevel(logging.CRITICAL)
+# Only show INFO and above from multi_llm_service, suppress WARNING about unavailable providers
+logging.getLogger('src.llm.multi_llm_service').setLevel(logging.ERROR)
 
 from src.agent.agent_orchestrator import MultiAgentOrchestrator
 

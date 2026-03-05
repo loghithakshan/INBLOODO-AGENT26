@@ -5,7 +5,7 @@ from fastapi import UploadFile
 import numpy as np
 import io
 from PIL import Image
-from src.input_parser.image_parser import reader
+from src.input_parser.image_parser import get_reader
 
 def extract_text_from_pdf(upload_file: UploadFile) -> str:
     """
@@ -22,17 +22,19 @@ def extract_text_from_pdf(upload_file: UploadFile) -> str:
         for page in doc:
             page_text = page.get_text()
             if not page_text.strip():  # If no text, try OCR on images
-                pix = page.get_pixmap()
-                img = Image.open(io.BytesIO(pix.tobytes()))
-                
-                # Convert PIL image to numpy array for EasyOCR
-                if img.mode != 'RGB':
-                    img = img.convert('RGB')
-                img_np = np.array(img)
-                
-                # Extract text using EasyOCR
-                results = reader.readtext(img_np, detail=0)
-                page_text = ' '.join(results)
+                ocr_reader = get_reader()
+                if ocr_reader:
+                    pix = page.get_pixmap()
+                    img = Image.open(io.BytesIO(pix.tobytes()))
+                    
+                    # Convert PIL image to numpy array for EasyOCR
+                    if img.mode != 'RGB':
+                        img = img.convert('RGB')
+                    img_np = np.array(img)
+                    
+                    # Extract text using EasyOCR
+                    results = ocr_reader.readtext(img_np, detail=0)
+                    page_text = ' '.join(results)
                 
             text += page_text + "\n"
         doc.close()

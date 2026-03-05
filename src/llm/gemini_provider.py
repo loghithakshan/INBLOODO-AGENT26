@@ -4,10 +4,14 @@ Google Gemini LLM Provider.
 
 import os
 import logging
+import warnings
 from typing import List, Dict, Any, Optional
 
 try:
-    import google.generativeai as genai
+    # Suppress FutureWarning from deprecated google.generativeai package
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", category=FutureWarning)
+        import google.generativeai as genai
 except ImportError:
     genai = None
 

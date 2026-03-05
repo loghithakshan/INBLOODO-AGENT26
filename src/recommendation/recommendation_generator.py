@@ -299,3 +299,209 @@ def generate_prescriptions(interpretation: list, risks: list, parameters: dict):
     prescriptions.insert(1, "⚠️ IMPORTANT: The prescription suggestions below are for informational purposes only and must be prescribed by a licensed healthcare professional after proper diagnosis.")
 
     return prescriptions
+
+
+def generate_medicines(interpretation: list, risks: list, parameters: dict):
+    """
+    Generate structured medicine/medication suggestions based on findings.
+    Separates supplements, OTC medicines, and prescription medications.
+    IMPORTANT: All medicines must be prescribed/approved by healthcare professionals.
+    """
+    medicines = {
+        "supplements": [],
+        "otc_medicines": [],
+        "prescription_medicines": [],
+        "dietary_measures": []
+    }
+
+    all_findings = [f.lower() for f in interpretation + risks]
+
+    # ANEMIA - Medicines and Supplements
+    if any("anemia" in finding or "low hemoglobin" in finding for finding in all_findings):
+        medicines["supplements"].extend([
+            "Iron Supplements: Ferrous sulfate 325mg or Ferrous gluconate 300mg daily",
+            "Vitamin B12 Supplements: 1000mcg daily (methylcobalamin or cyanocobalamin)",
+            "Folic Acid: 1mg daily (important for red blood cell production)",
+            "Vitamin C: 500mg daily (enhances iron absorption)"
+        ])
+        medicines["otc_medicines"].extend([
+            "Iron-fortified cereals and foods",
+            "Fortified orange juice (Vitamin C + Iron)"
+        ])
+        medicines["dietary_measures"].extend([
+            "Red meat: 2-3 times per week (beef, lamb)",
+            "Spinach and leafy greens: 1 cup daily",
+            "Lentils and legumes: Several times per week",
+            "Pumpkin seeds and nuts: Daily snack portion"
+        ])
+
+    # DIABETES - Medicines and Supplements
+    if any("diabetes" in finding or "glucose" in finding or "hba1c" in finding for finding in all_findings):
+        medicines["supplements"].extend([
+            "Cinnamon Extract: 1-2g daily (may improve insulin sensitivity)",
+            "Chromium: 100-200mcg daily (supports glucose metabolism)",
+            "Alpha Lipoic Acid: 300-600mg daily (antioxidant for blood sugar control)",
+            "Berberine: 500mg 2-3 times daily (alternative to metformin in some studies)"
+        ])
+        medicines["otc_medicines"].extend([
+            "Bitter melon supplements: 50-100mg daily",
+            "Fenugreek seeds: 5-10g soaked overnight",
+            "Gymnema sylvestre: 300-400mg daily",
+            "Diabetic-friendly food products"
+        ])
+        medicines["dietary_measures"].extend([
+            "Low glycemic index foods",
+            "High fiber foods: 25-30g daily",
+            "Whole grains instead of refined carbs",
+            "Beans and legumes: Several times per week"
+        ])
+
+    # HYPERTENSION/CARDIOVASCULAR - Medicines and Supplements
+    if any("cholesterol" in finding or "cardiovascular" in finding or "ldl" in finding or "blood pressure" in finding for finding in all_findings):
+        medicines["supplements"].extend([
+            "CoQ10: 100-300mg daily (heart health and statin support)",
+            "Omega-3 Fish Oil: 1000-2000mg daily (EPA/DHA for heart health)",
+            "Plant Sterols: 2g daily (proven to lower LDL cholesterol)",
+            "Red Yeast Rice: 1200-2400mg daily (natural statin alternative)",
+            "Aged Garlic Extract: 600-1200mg daily (cardiovascular support)"
+        ])
+        medicines["otc_medicines"].extend([
+            "Aspirin: 81mg daily (consult doctor) - prevention of heart attacks",
+            "Niacin (Vitamin B3): 1-2g daily (raises HDL, lowers LDL)",
+            "Soluble fiber supplements: Oats, psyllium husk"
+        ])
+        medicines["dietary_measures"].extend([
+            "Mediterranean diet pattern",
+            "Fatty fish: Salmon, sardines 2-3 times per week",
+            "Nuts and seeds: 30g daily (almonds, walnuts)",
+            "Olive oil: 2 tablespoons daily for cooking",
+            "Dark chocolate: 70% cocoa, 30g daily"
+        ])
+
+    # THYROID ISSUES - Medicines and Supplements
+    if any("thyroid" in finding or "tsh" in finding for finding in all_findings):
+        medicines["supplements"].extend([
+            "Selenium: 200mcg daily (supports thyroid hormone conversion)",
+            "Zinc: 15-25mg daily (essential for thyroid function)",
+            "Iron: 18-27mg daily (deficiency impairs thyroid function)",
+            "Ashwagandha: 600-900mg daily (adaptogen for thyroid health)",
+            "L-Tyrosine: 500-1000mg daily (amino acid for thyroid hormones)"
+        ])
+        medicines["otc_medicines"].extend([
+            "Kelp/Seaweed supplements: Iodine-rich (use cautiously)",
+            "B Complex Vitamins: Daily multivitamin"
+        ])
+        medicines["dietary_measures"].extend([
+            "Brazil nuts: 1-2 daily (selenium source)",
+            "Seafood: Fish, shrimp 2 times per week (iodine)",
+            "Eggs: 1-2 daily (selenium, iodine, zinc)",
+            "Dairy products: Milk, yogurt (iodine, selenium)"
+        ])
+
+    # LIVER ISSUES - Medicines and Supplements
+    if any("liver" in finding or "alt" in finding or "ast" in finding or "bilirubin" in finding for finding in all_findings):
+        medicines["supplements"].extend([
+            "Milk Thistle: 150-300mg 2-3 times daily (silymarin for liver protection)",
+            "Vitamin E: 400 IU daily (antioxidant for hepatic cells)",
+            "Vitamin C: 500-1000mg daily (liver antioxidant)",
+            "Glutathione: 250-500mg daily (master antioxidant for liver)",
+            "N-Acetyl Cysteine (NAC): 600-1200mg daily (liver detoxification)"
+        ])
+        medicines["otc_medicines"].extend([
+            "Liver-support multivitamins",
+            "Artichoke supplements: 300-600mg daily"
+        ])
+        medicines["dietary_measures"].extend([
+            "Coffee: 3-4 cups daily (protective polyphenols)",
+            "Cruciferous vegetables: Broccoli, cabbage, Brussels sprouts",
+            "Ginger: Fresh or tea form 1-2 cups daily",
+            "Turmeric: 500mg daily with black pepper (piperine)"
+        ])
+
+    # KIDNEY ISSUES - Medicines and Supplements
+    if any("kidney" in finding or "creatinine" in finding or "urea" in finding for finding in all_findings):
+        medicines["supplements"].extend([
+            "Vitamin D: 1000-2000 IU daily (kidney protection)",
+            "Omega-3 Fish Oil: 1000mg daily (renoprotective)",
+            "Coenzyme Q10: 100-200mg daily (kidney support)",
+            "Potassium restriction: Based on lab values (consult doctor)",
+            "Phosphate binders: With meals if prescribed"
+        ])
+        medicines["otc_medicines"].extend([
+            "Kidney-support multivitamins (low sodium)",
+            "Sodium-free seasonings"
+        ])
+        medicines["dietary_measures"].extend([
+            "Low sodium diet: <2300mg daily",
+            "Adequate water intake: 2-3 liters daily (consult doctor)",
+            "Low potassium foods: Apples, green beans, carrots",
+            "Limited protein: Adjust based on kidney function"
+        ])
+
+    # IMMUNE SUPPORT/INFECTION - Medicines and Supplements
+    if any("infection" in finding or "low wbc" in finding or "immune" in finding for finding in all_findings):
+        medicines["supplements"].extend([
+            "Vitamin C: 500-1000mg daily (immune support)",
+            "Vitamin D: 1000-2000 IU daily (immune modulation)",
+            "Zinc: 15-25mg daily (infection prevention)",
+            "Elderberry: 500-1500mg daily (antiviral)",
+            "Probiotics: Multi-strain, 10+ billion CFU daily"
+        ])
+        medicines["otc_medicines"].extend([
+            "Garlic supplements: 600-1200mg daily (antimicrobial)",
+            "Echinacea: 300-600mg 3 times daily (at symptom onset)",
+            "Honey and ginger lozenges"
+        ])
+        medicines["dietary_measures"].extend([
+            "Citrus fruits: Oranges, lemons, limes daily",
+            "Garlic and onions: Daily in cooking",
+            "Probiotics: Yogurt, kefir, sauerkraut",
+            "Mushrooms: Shiitake, maitake (immune-boosting)"
+        ])
+
+    # GENERAL WELLNESS - Medicines and Supplements
+    medicines["supplements"].extend([
+        "Multivitamin: Daily (if dietary intake insufficient)",
+        "Magnesium: 300-400mg daily (stress, muscle, heart health)",
+        "Probiotics: 10+ billion CFU daily (gut health)",
+        "Vitamin B Complex: Daily (energy, stress management)"
+    ])
+
+    medicines["otc_medicines"].extend([
+        "Over-the-counter pain relievers: Only as needed (consult doctor)",
+        "Antacids: For acid reflux (if needed)"
+    ])
+
+    # Add header
+    medicines_list = [
+        "💊 RECOMMENDED MEDICINES & SUPPLEMENTS by INBLOODO AI",
+        "⚠️  IMPORTANT: All medicines must be prescribed or approved by a licensed healthcare professional.",
+        "🔍 Dosages shown are typical; your doctor may adjust based on your specific condition.",
+        ""
+    ]
+
+    # Add sections
+    if medicines["supplements"]:
+        medicines_list.append("📋 SUPPLEMENTS & VITAMINS:")
+        medicines_list.extend([f"   • {m}" for m in medicines["supplements"]])
+        medicines_list.append("")
+
+    if medicines["otc_medicines"]:
+        medicines_list.append("💊 OVER-THE-COUNTER OPTIONS:")
+        medicines_list.extend([f"   • {m}" for m in medicines["otc_medicines"]])
+        medicines_list.append("")
+
+    if medicines["dietary_measures"]:
+        medicines_list.append("🥗 DIETARY MEASURES:")
+        medicines_list.extend([f"   • {m}" for m in medicines["dietary_measures"]])
+        medicines_list.append("")
+
+    medicines_list.extend([
+        "📌 CONSULTATION REQUIRED:",
+        "   • Discuss all supplements with your healthcare provider",
+        "   • Some supplements may interact with medications",
+        "   • Dosages should be personalized to your health profile",
+        "   • Report all medications and supplements to your doctor"
+    ])
+
+    return medicines_list

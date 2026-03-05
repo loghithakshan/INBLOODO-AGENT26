@@ -17,6 +17,7 @@ aiofiles
 easyocr
 requests
 fpdf
+reportlab
 
 # Database Drivers
 psycopg2-binary

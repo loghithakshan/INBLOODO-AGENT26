@@ -18,7 +18,7 @@ Path("data/uploads").mkdir(parents=True, exist_ok=True)
 Path("logs").mkdir(parents=True, exist_ok=True)
 
 try:
-    from src.api_simple import app
+    from src.api_optimized import app
     logger.info("API loaded successfully")
 except ImportError as e:
     logger.error(f"Failed to load API: {e}")

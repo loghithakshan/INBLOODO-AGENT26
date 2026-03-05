@@ -9,6 +9,7 @@ from typing import List, Dict, Any, Optional
 from src.llm.gemini_provider import GeminiLLMProvider
 from src.llm.openai_provider import OpenAILLMProvider
 from src.llm.claude_provider import ClaudeLLMProvider
+from src.llm.mock_provider import MockLLMProvider
 
 logger = logging.getLogger(__name__)
 
@@ -33,11 +34,12 @@ class MultiLLMService:
         """Initialize all available LLM providers."""
         logger.info("Initializing Multi-LLM Service...")
 
-        # Initialize all providers
+        # Initialize all providers (prefer real LLMs over mock)
         providers_to_init = [
             ("gemini", GeminiLLMProvider()),
             ("openai", OpenAILLMProvider()),
             ("claude", ClaudeLLMProvider()),
+            ("mock", MockLLMProvider()),  # Always available fallback
         ]
 
         for provider_name, provider in providers_to_init:
@@ -223,6 +225,39 @@ class MultiLLMService:
             "all_configured": list(self.providers.keys()),
             "fallback_enabled": True
         }
+    
+    def get_provider_by_index(self, index: int) -> Optional[str]:
+        """Get provider name at given index (for rotating through providers)."""
+        if not self.available_providers:
+            return self.primary_provider[0] if self.primary_provider else "gemini"
+        return self.available_providers[index % len(self.available_providers)][0]
+    
+    def get_provider_display_name(self, provider_name: str) -> str:
+        """Get display name for a provider."""
+        if provider_name in self.providers:
+            return self.providers[provider_name].name
+        return provider_name.title()
+    
+    def get_all_provider_names(self) -> List[str]:
+        """Get all available provider names."""
+        return [name for name, _ in self.available_providers]
+    
+    def generate_recommendations_with_provider(
+        self,
+        provider_name: str,
+        interpretations: List[str],
+        risks: List[str],
+        parameters: Dict[str, Any],
+        patient_context: Optional[Dict[str, Any]] = None
+    ) -> tuple:
+        """Generate recommendations and return both result and provider name."""
+        recommendations = self.generate_medical_recommendations(
+            interpretations, risks, parameters, patient_context, provider_name
+        )
+        actual_provider = provider_name
+        if provider_name not in self.providers or not self.providers[provider_name].is_available():
+            actual_provider = self.primary_provider[0] if self.primary_provider else "gemini"
+        return recommendations, self.get_provider_display_name(actual_provider)
 
 
 # Singleton instance

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard Switching Test</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .test-section { background: #f0f0f0; padding: 20px; margin: 10px 0; border-radius: 8px; }
+        .success { color: green; font-weight: bold; }
+        .error { color: red; font-weight: bold; }
+        .log-output { background: #000; color: #0f0; padding: 15px; border-radius: 8px; font-family: monospace; margin: 10px 0; max-height: 300px; overflow-y: auto; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; font-size: 14px; }
+        .btn-analysis { background: #667eea; color: white; }
+        .btn-dashboard { background: #4ecdc4; color: white; }
+        .section-view { padding: 20px; margin: 10px 0; border: 2px solid #ccc; border-radius: 8px; display: none; }
+        .section-view.active { display: block; border-color: green; }
+    </style>
+</head>
+<body>
+    <h1>Dashboard Switching Test</h1>
+    
+    <div class="test-section">
+        <h2>1. DOM Element Check</h2>
+        <p id="domCheck"></p>
+    </div>
+    
+    <div class="test-section">
+        <h2>2. View Switching Controls</h2>
+        <button class="btn-analysis" onclick="testShowView('analysis')">Show Analysis</button>
+        <button class="btn-dashboard" onclick="testShowView('dashboard')">Show Dashboard</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>3. View Display Test</h2>
+        <div id="analysisView" class="section-view active" style="background: #e8f4f8; border-color: #667eea;">
+            <h3>📊 Analysis View</h3>
+            <p>This is the analysis results section. It should show when Analysis button is clicked.</p>
+        </div>
+        <div id="dashboardView" class="section-view" style="background: #e8f8f4; border-color: #4ecdc4;">
+            <h3>📈 Dashboard View</h3>
+            <p>This is the dashboard section. It should show when Dashboard button is clicked.</p>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>4. Console Output</h2>
+        <div class="log-output" id="logOutput"></div>
+    </div>
+
+    <script>
+        // Logging utility
+        const logs = [];
+        const logOutput = document.getElementById('logOutput');
+        
+        function addLog(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            logs.push(`[${timestamp}] ${message}`);
+            logOutput.innerHTML = logs.map(l => l + '<br>').join('');
+            logOutput.scrollTop = logOutput.scrollHeight;
+            console.log(message);
+        }
+        
+        // DOM Check
+        function checkDOM() {
+            const elements = {
+                'analysisView': document.getElementById('analysisView'),
+                'dashboardView': document.getElementById('dashboardView')
+            };
+            
+            const allFound = Object.values(elements).every(el => el !== null);
+            const output = Object.entries(elements)
+                .map(([name, el]) => `${el ? '✅' : '❌'} ${name}`)
+                .join('<br>');
+            
+            document.getElementById('domCheck').innerHTML = output + '<br>' + 
+                (allFound ? '<span class="success">All elements found!</span>' : '<span class="error">Some elements missing!</span>');
+            
+            addLog('DOM check completed');
+        }
+        
+        // Test showView function
+        function testShowView(view) {
+            addLog(`📍 testShowView called with: ${view}`);
+            
+            const analysis = document.getElementById('analysisView');
+            const dashboard = document.getElementById('dashboardView');
+            
+            if (!analysis || !dashboard) {
+                addLog('❌ Elements not found!');
+                return;
+            }
+            
+            if (view === 'dashboard') {
+                addLog('📍 Switching to dashboard...');
+                analysis.classList.remove('active');
+                dashboard.classList.add('active');
+                addLog('✅ Dashboard class added, Analysis class removed');
+            } else {
+                addLog('📍 Switching to analysis...');
+                dashboard.classList.remove('active');
+                analysis.classList.add('active');
+                addLog('✅ Analysis class added, Dashboard class removed');
+            }
+            
+            // Verify the change
+            setTimeout(() => {
+                const analysisVisible = window.getComputedStyle(analysis).display !== 'none';
+                const dashboardVisible = window.getComputedStyle(dashboard).display !== 'none';
+                addLog(`📊 Analysis visible: ${analysisVisible}, Dashboard visible: ${dashboardVisible}`);
+            }, 100);
+        }
+        
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            addLog('🚀 Test page loaded');
+            checkDOM();
+        });
+    </script>
+</body>
+</html>

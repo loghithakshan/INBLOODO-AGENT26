@@ -303,8 +303,18 @@ class ResponseCache:
         self.lock = threading.RLock()
         self.max_items = 1000
     
-    def cache_response(self, key: str, data: Dict, ttl: int = 3600) -> None:
-        """Cache a response"""
+    def _hash_key(self, *args, **kwargs) -> str:
+        """Generate cache key from arguments"""
+        cache_data = {
+            'args': str(args),
+            'kwargs': json.dumps(kwargs, sort_keys=True, default=str)
+        }
+        return hashlib.md5(
+            json.dumps(cache_data, sort_keys=True).encode()
+        ).hexdigest()
+    
+    def set(self, key: str, data: Dict, ttl: int = 3600) -> None:
+        """Cache a response (alias for cache_response)"""
         with self.lock:
             if len(self.cache) >= self.max_items:
                 # Remove oldest entry
@@ -321,7 +331,11 @@ class ResponseCache:
                 'expires': time.time() + ttl
             }
     
-    def get_response(self, key: str) -> Optional[Dict]:
+    def cache_response(self, key: str, data: Dict, ttl: int = 3600) -> None:
+        """Cache a response (deprecated, use set instead)"""
+        self.set(key, data, ttl)
+    
+    def get(self, key: str) -> Optional[Dict]:
         """Get cached response if valid"""
         with self.lock:
             if key not in self.cache:
@@ -333,6 +347,10 @@ class ResponseCache:
                 return None
             
             return entry['data']
+    
+    def get_response(self, key: str) -> Optional[Dict]:
+        """Get cached response if valid (alias for get)"""
+        return self.get(key)
     
     def get_stats(self) -> Dict[str, Any]:
         """Get cache statistics"""
