@@ -507,10 +507,6 @@ async def analyze_report(
                     content = await file.read()
                     text = content.decode("utf-8")
                     params = extract_parameters_from_text(text)
-                elif filename.endswith('.txt'):
-                    content = await file.read()
-                    text = content.decode('utf-8')
-                    params = extract_parameters_from_text(text)
                 else:
                     raise HTTPException(400, f"Unsupported file type: {filename}. Supported: PDF, PNG, JPG, TIF, TIFF, BMP, WEBP, CSV, JSON, TXT")
 

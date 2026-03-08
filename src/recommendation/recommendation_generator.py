@@ -1,11 +1,11 @@
 from src.llm.llm_service import LLMService
 
-def generate_recommendations(interpretation: list, risks: list):
+def generate_recommendations(interpretation: list, risks: list, parameters: dict = None):
     """
     Generate lifestyle recommendations and medical advice based on findings and risks using LLM.
     """
     llm_service = LLMService()
-    parameters = {}  # No parameters provided in current function signature
+    parameters = parameters or {}
     patient_context = None
 
     # Try to get recommendations from LLM

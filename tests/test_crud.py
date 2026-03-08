@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from .models import Report, Base  # Assuming Base is defined in models.py
-from .crud import create_report, get_reports, get_report, update_report, delete_report
+from src.database.models import Report, Base
+from src.database.crud import create_report, get_reports, get_report, update_report, delete_report
 
 # Database setup (adjust path as needed)
 DATABASE_URL = "sqlite:///./test.db"  # Use SQLite for testing

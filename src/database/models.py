@@ -20,16 +20,21 @@ if "sqlite" in DATABASE_URL:
     connect_args = {"check_same_thread": False}
 
 # Production-grade engine configuration
-engine = create_engine(
-    DATABASE_URL, 
+_engine_kwargs = dict(
     echo=False,
     connect_args=connect_args,
-    # Best practices for production resilience:
     pool_pre_ping=True,  # Checks connection before using it (prevents stale connection errors)
-    pool_size=10,        # Sensible default for pool size
-    max_overflow=20,     # Allow some burst
-    pool_recycle=300     # Recycle connections every 5 minutes
 )
+
+# SQLite does not support pool_size/max_overflow/pool_recycle
+if "sqlite" not in DATABASE_URL:
+    _engine_kwargs.update(
+        pool_size=10,        # Sensible default for pool size
+        max_overflow=20,     # Allow some burst
+        pool_recycle=300,    # Recycle connections every 5 minutes
+    )
+
+engine = create_engine(DATABASE_URL, **_engine_kwargs)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 

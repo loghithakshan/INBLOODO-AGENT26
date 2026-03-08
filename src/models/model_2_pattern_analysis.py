@@ -5,8 +5,8 @@ import joblib
 import os
 
 # Placeholder for ML model - in production, this would be trained on real data
-MODEL_PATH = "models/risk_predictor.pkl"
-SCALER_PATH = "models/scaler.pkl"
+MODEL_PATH = os.path.join(os.path.dirname(__file__), "risk_predictor.pkl")
+SCALER_PATH = os.path.join(os.path.dirname(__file__), "scaler.pkl")
 
 def analyze_risks(parameters: dict, interpretation: list = None):
     """

@@ -553,6 +553,7 @@
 
         .file-input {
             /* FILE INPUT MUST BE VISIBLE TO CLICKS - don't use display:none */
+            cursor: pointer;
         }
 
         .supported-formats {
@@ -640,6 +641,311 @@
             color: #667eea;
         }
 
+        /* Info Button & Agent Popup Styles */
+        .info-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            margin-left: 8px;
+        }
+
+        .info-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.5);
+        }
+
+        .info-button:active {
+            transform: scale(0.95);
+        }
+
+        /* Top Right Help Button */
+        .help-button-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1500;
+        }
+
+        .help-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: 2px solid white;
+            border-radius: 50%;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .help-button:hover {
+            transform: scale(1.15);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .help-button:active {
+            transform: scale(0.9);
+        }
+
+        /* How to Use Popup */
+        .how-to-use-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 4000;
+        }
+
+        .how-to-use-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .how-to-use-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 16px;
+            padding: 35px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
+            max-width: 650px;
+            max-height: 75vh;
+            overflow-y: auto;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 4001;
+        }
+
+        .how-to-use-popup.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .how-to-use-popup .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 28px;
+            color: #999;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .how-to-use-popup .close-btn:hover {
+            color: #667eea;
+        }
+
+        .how-to-use-popup h2 {
+            color: #667eea;
+            font-size: 32px;
+            margin: 0 0 25px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .how-to-use-popup h3 {
+            color: #764ba2;
+            font-size: 18px;
+            margin: 20px 0 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .step-box {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e8ecf5 100%);
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.7;
+            color: #333;
+        }
+
+        .step-box strong {
+            color: #667eea;
+            font-size: 15px;
+        }
+
+        .file-format-badge {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin: 0 4px;
+        }
+
+        .tips-box {
+            background: #fffbea;
+            border-left: 4px solid #ffa94d;
+            padding: 12px 15px;
+            margin: 15px 0;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #c25d00;
+            line-height: 1.6;
+        }
+
+        /* Agent Info Popup */
+        .agent-info-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            max-height: 70vh;
+            overflow-y: auto;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 3000;
+            animation: popupSlideIn 0.4s ease;
+        }
+
+        .agent-info-popup.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .agent-info-popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 2999;
+        }
+
+        .agent-info-popup-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        @keyframes popupSlideIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -45%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        .agent-info-popup h2 {
+            color: #667eea;
+            font-size: 28px;
+            margin: 0 0 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .agent-info-popup .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #999;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .agent-info-popup .close-btn:hover {
+            color: #667eea;
+        }
+
+        .agent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .agent-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e8ecf5 100%);
+            border: 2px solid #667eea;
+            border-radius: 12px;
+            padding: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .agent-card:hover {
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15);
+            transform: translateY(-4px);
+            border-color: #764ba2;
+        }
+
+        .agent-card h3 {
+            color: #667eea;
+            font-size: 16px;
+            margin: 0 0 10px 0;
+            font-weight: 600;
+        }
+
+        .agent-card p {
+            color: #333;
+            font-size: 13px;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .agent-info-section {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 10px 12px;
+            margin: 12px 0;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .agent-info-section strong {
+            color: #667eea;
+        }
+
         .results-section {
             margin-top: 40px;
             animation: fadeIn 1s ease-out 0.5s both;
@@ -662,17 +968,78 @@
             margin-bottom: 25px;
             animation: slideInLeft 0.6s ease-out;
             border-left: 6px solid #667eea;
-            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-            transform-style: preserve-3d;
+            transition: all 0.35s ease;
             position: relative;
             backdrop-filter: blur(12px);
-            cursor: default;
+            cursor: pointer;
         }
 
         .results-card:hover {
-            box-shadow: 0 30px 60px rgba(102, 126, 234, 0.3);
-            transform: translateY(-14px) rotateX(8deg) rotateY(-6deg) scaleZ(1.02);
-            border-color: rgba(102, 126, 234, 0.5);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.2);
+            border-left-width: 8px;
+        }
+
+        /* Popup Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideInUp 0.4s ease;
+            position: relative;
+            color: #333;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.1);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            color: #333;
+        }
+
+        .modal-close:hover {
+            background: rgba(0, 0, 0, 0.2);
+            transform: rotate(90deg);
+        }
+
+        @media (max-width: 768px) {
+            .modal-content {
+                max-width: 95%;
+                padding: 25px;
+            }
         }
 
         /* Section-specific styling */
@@ -2044,7 +2411,9 @@
 
         <div class="container">
             <div class="header">
-                <h1><i class="fas fa-microscope"></i> INBLOODO AGENT</h1>
+                <h1><i class="fas fa-microscope"></i> INBLOODO AGENT 
+                    <button class="info-button" onclick="openAgentPopup()" title="Learn about AI Agents">i</button>
+                </h1>
                 <p>Advanced AI-powered analysis of your blood reports with instant recommendations</p>
             </div>
 
@@ -2153,6 +2522,110 @@
 
             <div class="results-section" id="resultsSection">
                 <!-- Results will be populated here -->
+            </div>
+
+            <!-- Modal Overlay for Popup -->
+            <div class="modal-overlay" id="modalOverlay">
+                <div class="modal-content" id="modalContent">
+                    <button class="modal-close" onclick="closeModal()" title="Close">✕</button>
+                    <!-- Modal content will be populated here -->
+                </div>
+            </div>
+
+            <!-- How to Use Popup -->
+            <div class="help-button-container">
+                <button class="help-button" onclick="openHowToUse()" title="How to Use">?</button>
+            </div>
+
+            <div class="how-to-use-overlay" id="howToUseOverlay"></div>
+            <div class="how-to-use-popup" id="howToUsePopup">
+                <button class="close-btn" onclick="closeHowToUse()">&times;</button>
+                <h2>📖 How to Use</h2>
+                
+                <h3>Step 1: Upload Your Blood Report</h3>
+                <div class="step-box">
+                    Upload a blood report in any of these formats:
+                    <div style="margin-top: 8px;">
+                        <span class="file-format-badge">PDF</span>
+                        <span class="file-format-badge">JPG/PNG</span>
+                        <span class="file-format-badge">CSV</span>
+                    </div>
+                </div>
+
+                <h3>Step 2: Choose Analysis Format</h3>
+                <div class="step-box">
+                    <strong>📋 Select Format:</strong> Pick your preferred output format (HTML, PDF, or Data Table)
+                </div>
+
+                <h3>Step 3: Run Analysis</h3>
+                <div class="step-box">
+                    <strong>🚀 Click Analyze:</strong> The system will process your report using 4 AI agents simultaneously for comprehensive analysis
+                </div>
+
+                <h3>Step 4: Review Results</h3>
+                <div class="step-box">
+                    <strong>📊 View Dashboard:</strong> See blood parameters, health risks, recommended medicines, and lifestyle recommendations
+                </div>
+
+                <h3>Step 5: Download Report</h3>
+                <div class="step-box">
+                    <strong>⬇️ Download:</strong> Save your analysis as a PDF document with all findings and recommendations
+                </div>
+
+                <div class="tips-box">
+                    <strong>💡 Pro Tips:</strong><br>
+                    • For best results, ensure your report is clear and legible<br>
+                    • The system analyzes all blood values automatically<br>
+                    • Results are for informational purposes only<br>
+                    • Always consult a doctor for medical decisions
+                </div>
+
+                <div class="step-box" style="border-left-color: #667eea; background: #f0f4ff;">
+                    <strong style="color: #667eea;">ℹ️ About the AI Agents:</strong><br>
+                    Click the <strong>i</strong> button in the header to learn about our 4 AI agents that work together to analyze your blood report.
+                </div>
+            </div>
+
+            <!-- Agent Info Popup -->
+            <div class="agent-info-popup-overlay" id="agentPopupOverlay"></div>
+            <div class="agent-info-popup" id="agentInfoPopup">
+                <button class="close-btn" onclick="closeAgentPopup()">&times;</button>
+                <h2>🤖 AI Agent System</h2>
+                
+                <div class="agent-info-section">
+                    <strong>What are AI Agents?</strong><br>
+                    Special AI programs that focus on specific tasks. Each agent analyzes different aspects of your blood report to provide comprehensive insights.
+                </div>
+
+                <h3 style="color: #667eea; margin-top: 15px;">Our Four Intelligent Agents:</h3>
+                <div class="agent-grid">
+                    <div class="agent-card">
+                        <h3>📊 Parameter Agent</h3>
+                        <p>Analyzes blood values and compares them with normal medical ranges. Identifies abnormal readings and their severity.</p>
+                    </div>
+                    <div class="agent-card">
+                        <h3>🔍 Pattern Agent</h3>
+                        <p>Detects health patterns and correlations between different blood parameters. Finds hidden relationships in your data.</p>
+                    </div>
+                    <div class="agent-card">
+                        <h3>⚠️ Risk Agent</h3>
+                        <p>Identifies potential health risks and complications. Warns about serious conditions that need immediate attention.</p>
+                    </div>
+                    <div class="agent-card">
+                        <h3>💊 Treatment Agent</h3>
+                        <p>Suggests medicines, supplements, and lifestyle changes. Provides practical recommendations for improving health.</p>
+                    </div>
+                </div>
+
+                <div class="agent-info-section" style="margin-top: 15px;">
+                    <strong>How They Work Together:</strong><br>
+                    All four agents analyze your blood report simultaneously using different AI models (Gemini, GPT-4, Claude, Grok). Results are combined to give you the most accurate and reliable analysis possible.
+                </div>
+
+                <div class="agent-info-section" style="border-left-color: #ff6b6b; color: #ff6b6b;">
+                    <strong style="color: #ff6b6b;">⚠️ Important Disclaimer:</strong><br>
+                    Agents provide supplementary analysis only. Always consult a licensed healthcare professional for medical advice and diagnosis.
+                </div>
             </div>
 
             <!-- Dashboard View -->
@@ -2371,6 +2844,128 @@
                     }, 500);
                 }
             }
+
+            // MODAL POPUP FUNCTIONS
+            function openModal(title, content) {
+                const modalOverlay = document.getElementById('modalOverlay');
+                const modalContent = document.getElementById('modalContent');
+                
+                if (modalContent) {
+                    // Keep the close button and update content
+                    const closeBtn = modalContent.querySelector('.modal-close');
+                    modalContent.innerHTML = `
+                        <button class="modal-close" onclick="closeModal()" title="Close">✕</button>
+                        <h2 style="margin-top: 0; color: #333; font-size: 1.8rem; margin-bottom: 20px;">${title}</h2>
+                        ${content}
+                    `;
+                }
+                
+                if (modalOverlay) {
+                    modalOverlay.classList.add('show');
+                    document.body.style.overflow = 'hidden'; // Prevent scrolling
+                }
+            }
+
+            function closeModal() {
+                const modalOverlay = document.getElementById('modalOverlay');
+                if (modalOverlay) {
+                    modalOverlay.classList.remove('show');
+                    document.body.style.overflow = 'auto'; // Re-enable scrolling
+                }
+            }
+
+            // Close modal when clicking outside the modal content
+            document.addEventListener('DOMContentLoaded', function() {
+                const modalOverlay = document.getElementById('modalOverlay');
+                if (modalOverlay) {
+                    modalOverlay.addEventListener('click', function(e) {
+                        if (e.target === modalOverlay) {
+                            closeModal();
+                        }
+                    });
+                }
+            });
+
+            // AGENT INFO POPUP FUNCTIONS
+            function openAgentPopup() {
+                const popup = document.getElementById('agentInfoPopup');
+                const overlay = document.getElementById('agentPopupOverlay');
+                if (popup && overlay) {
+                    popup.classList.add('show');
+                    overlay.classList.add('show');
+                    document.body.style.overflow = 'hidden'; // Prevent scrolling
+                }
+            }
+
+            function closeAgentPopup() {
+                const popup = document.getElementById('agentInfoPopup');
+                const overlay = document.getElementById('agentPopupOverlay');
+                if (popup && overlay) {
+                    popup.classList.remove('show');
+                    overlay.classList.remove('show');
+                    document.body.style.overflow = 'auto'; // Re-enable scrolling
+                }
+            }
+
+            // Setup agent popup event listeners
+            document.addEventListener('DOMContentLoaded', function() {
+                const agentPopupOverlay = document.getElementById('agentPopupOverlay');
+                const agentPopup = document.getElementById('agentInfoPopup');
+                const closeBtn = agentPopup ? agentPopup.querySelector('.close-btn') : null;
+
+                // Close popup when clicking on overlay
+                if (agentPopupOverlay) {
+                    agentPopupOverlay.addEventListener('click', closeAgentPopup);
+                }
+
+                // Close popup when clicking close button
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', closeAgentPopup);
+                }
+
+                // Close popup when mouse leaves the popup area
+                if (agentPopup) {
+                    agentPopup.addEventListener('mouseleave', closeAgentPopup);
+                }
+            });
+
+            // HOW TO USE POPUP FUNCTIONS
+            function openHowToUse() {
+                const popup = document.getElementById('howToUsePopup');
+                const overlay = document.getElementById('howToUseOverlay');
+                if (popup && overlay) {
+                    popup.classList.add('show');
+                    overlay.classList.add('show');
+                    document.body.style.overflow = 'hidden';
+                }
+            }
+
+            function closeHowToUse() {
+                const popup = document.getElementById('howToUsePopup');
+                const overlay = document.getElementById('howToUseOverlay');
+                if (popup && overlay) {
+                    popup.classList.remove('show');
+                    overlay.classList.remove('show');
+                    document.body.style.overflow = 'auto';
+                }
+            }
+
+            // Setup how-to-use popup event listeners
+            document.addEventListener('DOMContentLoaded', function() {
+                const howToUseOverlay = document.getElementById('howToUseOverlay');
+                const howToUsePopup = document.getElementById('howToUsePopup');
+                const closeBtn = howToUsePopup ? howToUsePopup.querySelector('.close-btn') : null;
+
+                // Close popup when clicking on overlay
+                if (howToUseOverlay) {
+                    howToUseOverlay.addEventListener('click', closeHowToUse);
+                }
+
+                // Close popup when clicking close button
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', closeHowToUse);
+                }
+            });
 
             // DISPLAY RESULTS - COMPREHENSIVE ENHANCED ANALYSIS
             function showResults(data) {
@@ -2607,6 +3202,26 @@
                 
                 console.log('✨ Results HTML set with show class');
                 console.log('🎯 Element visibility:', window.getComputedStyle(resultsSection).opacity);
+                
+                // Add click handlers to results cards to open in popup
+                document.querySelectorAll('.results-card').forEach(card => {
+                    card.style.cursor = 'pointer';
+                    card.addEventListener('click', function(e) {
+                        if (e.target.tagName === 'BUTTON') return; // Don't open modal if button clicked
+                        
+                        const title = this.querySelector('h3')?.textContent || 'Details';
+                        const content = this.innerHTML;
+                        openModal(title, content);
+                    });
+                    
+                    // Add hover effect
+                    card.addEventListener('mouseenter', function() {
+                        this.style.backgroundColor = 'rgba(255, 255, 255, 0.98)';
+                    });
+                    card.addEventListener('mouseleave', function() {
+                        this.style.backgroundColor = '';
+                    });
+                });
                 
                 // Auto-switch to 3D dashboard view (instead of plain analysis view)
                 showView('dashboard');
@@ -2996,131 +3611,310 @@
                 }
 
                 try {
-                    // Verify jsPDF is loaded (UMD build exposes it as window.jspdf)
+                    // Verify jsPDF is loaded
                     if (typeof window.jspdf === 'undefined' || typeof window.jspdf.jsPDF === 'undefined') {
                         console.error('jsPDF window.jspdf:', window.jspdf);
-                        console.error('jsPDF window.jspdf.jsPDF:', window.jspdf?.jsPDF);
-                        throw new Error('jsPDF library is not loaded. Available: ' + Object.keys(window).filter(k => k.toLowerCase().includes('pdf') || k.toLowerCase().includes('doc')).join(', '));
+                        throw new Error('jsPDF library is not loaded');
                     }
                     console.log('✅ jsPDF library available at window.jspdf.jsPDF');
 
                     const data = window.currentAnalysisData;
                     const jsPDFConstructor = window.jspdf.jsPDF;
-                    const doc = new jsPDFConstructor();
+                    const doc = new jsPDFConstructor({
+                        orientation: 'portrait',
+                        unit: 'mm',
+                        format: 'a4'
+                    });
+                    
                     const pageWidth = doc.internal.pageSize.getWidth();
                     const pageHeight = doc.internal.pageSize.getHeight();
-                    let yPosition = 20;
-                    const lineHeight = 7;
-                    const maxWidth = pageWidth - 40;
+                    const margin = 15;
+                    const contentWidth = pageWidth - (2 * margin);
+                    let yPosition = margin;
 
-                    // Helper function to add text with word wrapping
-                    const addText = (text, fontSize = 12, bold = false, color = [0, 0, 0]) => {
-                        doc.setFontSize(fontSize);
-                        doc.setTextColor(...color);
-                        if (bold) doc.setFont(undefined, 'bold');
+                    // Set default font to Helvetica
+                    doc.setFont('helvetica', 'normal');
+
+                    // TEXT SANITIZATION FUNCTION
+                    const sanitizeText = (text) => {
+                        if (!text || typeof text !== 'string') return '';
                         
-                        const lines = doc.splitTextToSize(text, maxWidth);
-                        lines.forEach(line => {
-                            if (yPosition + lineHeight > pageHeight - 10) {
-                                doc.addPage();
-                                yPosition = 20;
-                            }
-                            doc.text(line, 20, yPosition);
-                            yPosition += lineHeight;
+                        // Remove HTML tags
+                        let cleaned = text.replace(/<[^>]*>/g, '');
+                        
+                        // Replace HTML entities
+                        const entityMap = {
+                            '&amp;': '&',
+                            '&lt;': '<',
+                            '&gt;': '>',
+                            '&quot;': '"',
+                            '&#39;': "'",
+                            '&nbsp;': ' ',
+                            '&bull;': '•',
+                            '&mdash;': '-',
+                            '&ndash;': '-',
+                            '&rsquo;': "'",
+                            '&lsquo;': "'",
+                            '&ldquo;': '"',
+                            '&rdquo;': '"'
+                        };
+                        
+                        Object.entries(entityMap).forEach(([entity, char]) => {
+                            cleaned = cleaned.replace(new RegExp(entity, 'g'), char);
                         });
-                        doc.setFont(undefined, 'normal');
+                        
+                        // Decode any remaining HTML entities
+                        const textarea = document.createElement('textarea');
+                        textarea.innerHTML = cleaned;
+                        cleaned = textarea.value;
+                        
+                        // Replace problematic Unicode characters with safe alternatives
+                        cleaned = cleaned.replace(/[^\x20-\x7E\n•·°™©®–—]/g, '');
+                        
+                        // Remove extra whitespace
+                        cleaned = cleaned.replace(/\s+/g, ' ').trim();
+                        
+                        return cleaned;
                     };
 
-                    // Header
+                    // Helper function to add section header
+                    const addSectionHeader = (text) => {
+                        if (yPosition + 15 > pageHeight - margin) {
+                            doc.addPage();
+                            yPosition = margin;
+                        }
+                        
+                        // Section title with background
+                        doc.setFillColor(102, 126, 234);
+                        doc.rect(margin, yPosition, contentWidth, 8, 'F');
+                        doc.setTextColor(255, 255, 255);
+                        doc.setFont('helvetica', 'bold');
+                        doc.setFontSize(12);
+                        doc.text(sanitizeText(text), margin + 3, yPosition + 6);
+                        doc.setTextColor(0, 0, 0);
+                        doc.setFont('helvetica', 'normal');
+                        yPosition += 12;
+                    };
+
+                    // Helper function to add normal text with proper wrapping
+                    const addText = (text, fontSize = 11, options = {}) => {
+                        const {bold = false, color = [0, 0, 0], indent = 0} = options;
+                        
+                        // Sanitize input text
+                        const cleanText = sanitizeText(text);
+                        
+                        if (yPosition + 8 > pageHeight - margin) {
+                            doc.addPage();
+                            yPosition = margin;
+                        }
+                        
+                        doc.setFont('helvetica', bold ? 'bold' : 'normal');
+                        doc.setFontSize(fontSize);
+                        doc.setTextColor(...color);
+                        
+                        const lines = doc.splitTextToSize(cleanText, contentWidth - indent);
+                        lines.forEach((line, index) => {
+                            if (yPosition + 6 > pageHeight - margin) {
+                                doc.addPage();
+                                yPosition = margin;
+                            }
+                            doc.text(line, margin + indent, yPosition);
+                            yPosition += 6;
+                        });
+                        
+                        doc.setTextColor(0, 0, 0);
+                        doc.setFont('helvetica', 'normal');
+                    };
+
+                    // Helper function to add spacing
+                    const addSpace = (height = 4) => {
+                        yPosition += height;
+                    };
+
+                    // ===== HEADER =====
                     doc.setFillColor(102, 126, 234);
-                    doc.rect(0, 0, pageWidth, 40, 'F');
+                    doc.rect(0, 0, pageWidth, 30, 'F');
                     doc.setTextColor(255, 255, 255);
-                    doc.setFontSize(24);
-                    doc.setFont(undefined, 'bold');
-                    doc.text('BLOOD REPORT ANALYSIS', pageWidth / 2, 25, { align: 'center' });
-                    yPosition = 50;
-                    doc.setTextColor(0, 0, 0);
+                    doc.setFont('helvetica', 'bold');
+                    doc.setFontSize(20);
+                    doc.text('BLOOD REPORT ANALYSIS', pageWidth / 2, 12, { align: 'center' });
+                    doc.setFontSize(10);
+                    doc.setFont('helvetica', 'normal');
+                    doc.text('AI-Powered Medical Blood Parameter Analysis', pageWidth / 2, 20, { align: 'center' });
+                    yPosition = 35;
 
-                    // Risk Summary
-                    addText('OVERALL RISK ASSESSMENT', 14, true, [102, 126, 234]);
-                    yPosition += 5;
-                    addText(`Risk Level: ${(data.overall_risk || 'LOW').toUpperCase()}`, 12, true);
-                    addText(`Summary: ${data.summary || 'No summary available'}`, 11);
-                    yPosition += 10;
+                    // ===== OVERALL RISK ASSESSMENT =====
+                    addSectionHeader('OVERALL RISK ASSESSMENT');
+                    
+                    const riskLevel = (data.overall_risk || 'LOW').toUpperCase();
+                    const riskColors = {
+                        'LOW': [81, 207, 102],
+                        'MODERATE': [255, 169, 77],
+                        'HIGH': [255, 107, 107]
+                    };
+                    const riskColor = riskColors[riskLevel] || [0, 0, 0];
+                    
+                    addText(`Risk Level: ${riskLevel}`, 13, {bold: true, color: riskColor});
+                    if (data.summary) {
+                        addSpace(2);
+                        addText(`Summary: ${data.summary}`, 10);
+                    }
+                    addSpace(6);
 
-                    // Parameters
-                    addText('EXTRACTED PARAMETERS', 14, true, [102, 126, 234]);
-                    yPosition += 5;
-                    Object.entries(data.extracted_parameters || {}).forEach(([key, value]) => {
-                        addText(`• ${key}: ${value}`, 11);
-                    });
-                    yPosition += 10;
+                    // ===== EXTRACTED PARAMETERS =====
+                    if (data.extracted_parameters && Object.keys(data.extracted_parameters).length > 0) {
+                        addSectionHeader('EXTRACTED MEDICAL PARAMETERS');
+                        
+                        const params = data.extracted_parameters;
+                        const paramEntries = Object.entries(params);
+                        
+                        // Create table-like format
+                        for (let i = 0; i < paramEntries.length; i += 2) {
+                            if (yPosition + 8 > pageHeight - margin) {
+                                doc.addPage();
+                                yPosition = margin;
+                            }
+                            
+                            const [key1, value1] = paramEntries[i];
+                            const paramText1 = sanitizeText(`${key1.replace(/_/g, ' ')}: ${value1}`);
+                            
+                            doc.setFont('helvetica', 'normal');
+                            doc.setFontSize(10);
+                            doc.text(paramText1, margin + 3, yPosition);
+                            
+                            if (paramEntries[i + 1]) {
+                                const [key2, value2] = paramEntries[i + 1];
+                                const paramText2 = sanitizeText(`${key2.replace(/_/g, ' ')}: ${value2}`);
+                                doc.text(paramText2, margin + contentWidth / 2, yPosition);
+                            }
+                            
+                            yPosition += 6;
+                        }
+                        addSpace(4);
+                    }
 
-                    // Interpretations
+                    // ===== CLINICAL INTERPRETATIONS =====
                     if (data.interpretations && data.interpretations.length > 0) {
-                        addText('CLINICAL INTERPRETATIONS', 14, true, [0, 150, 255]);
-                        yPosition += 5;
-                        data.interpretations.forEach(item => {
-                            addText(`• ${item}`, 11);
+                        addSectionHeader('CLINICAL INTERPRETATIONS');
+                        data.interpretations.forEach((item, idx) => {
+                            addText(`${idx + 1}. ${item}`, 10, {indent: 3});
+                            addSpace(2);
                         });
-                        yPosition += 10;
+                        addSpace(4);
                     }
 
-                    // Risks
+                    // ===== IDENTIFIED HEALTH RISKS =====
                     if (data.risks && data.risks.length > 0) {
-                        addText('IDENTIFIED HEALTH RISKS', 14, true, [255, 107, 107]);
-                        yPosition += 5;
-                        data.risks.forEach(item => {
-                            addText(`⚠️ ${item}`, 11);
+                        addSectionHeader('IDENTIFIED HEALTH RISKS');
+                        data.risks.forEach((item, idx) => {
+                            addText(`⚠ ${item}`, 10, {color: [255, 107, 107], indent: 3});
+                            addSpace(2);
                         });
-                        yPosition += 10;
+                        addSpace(4);
                     }
 
-                    // Medicines
+                    // ===== RECOMMENDED MEDICINES =====
                     if (data.medicines && data.medicines.length > 0) {
-                        addText('RECOMMENDED MEDICINES & SUPPLEMENTS', 14, true, [78, 205, 196]);
-                        yPosition += 5;
-                        addText('IMPORTANT: All medicines must be prescribed or approved by a licensed healthcare professional.', 9, false, [255, 0, 0]);
-                        yPosition += 5;
-                        data.medicines.forEach(medicine => {
+                        addSectionHeader('RECOMMENDED MEDICINES & SUPPLEMENTS');
+                        
+                        addText('⚠ IMPORTANT: All medicines must be prescribed or approved by a licensed healthcare professional.', 9, 
+                            {color: [255, 0, 0], bold: true});
+                        addSpace(3);
+                        
+                        data.medicines.forEach((medicine, idx) => {
                             if (typeof medicine === 'string') {
-                                addText(`• ${medicine}`, 10);
+                                addText(`${idx + 1}. ${medicine}`, 10, {indent: 3});
+                                addSpace(2);
                             }
                         });
-                        yPosition += 10;
+                        addSpace(4);
                     }
 
-                    // Recommendations
+                    // ===== HEALTH RECOMMENDATIONS =====
                     if (data.recommendations && data.recommendations.length > 0) {
-                        addText('HEALTH RECOMMENDATIONS', 14, true, [81, 207, 102]);
-                        yPosition += 5;
+                        addSectionHeader('HEALTH RECOMMENDATIONS');
                         data.recommendations.forEach((rec, idx) => {
-                            addText(`${idx + 1}. ${rec}`, 11);
+                            addText(`${idx + 1}. ${rec}`, 10, {indent: 3});
+                            addSpace(2);
                         });
-                        yPosition += 10;
+                        addSpace(4);
                     }
 
-                    // Prescriptions
+                    // ===== MEDICAL PRESCRIPTIONS =====
                     if (data.prescriptions && Object.keys(data.prescriptions).length > 0) {
-                        addText('MEDICAL PRESCRIPTIONS BY CATEGORY', 14, true, [255, 169, 77]);
-                        yPosition += 5;
+                        addSectionHeader('MEDICAL PRESCRIPTIONS BY CATEGORY');
+                        
                         Object.entries(data.prescriptions).forEach(([category, items]) => {
                             if (items && items.length > 0) {
-                                addText(`${category}:`, 12, true);
-                                items.forEach(item => {
-                                    addText(`  • ${item}`, 10);
+                                addText(category.toUpperCase(), 11, {bold: true, indent: 3});
+                                items.forEach((item, idx) => {
+                                    addText(`${idx + 1}. ${item}`, 10, {indent: 6});
                                 });
+                                addSpace(3);
                             }
                         });
-                        yPosition += 10;
+                        addSpace(4);
                     }
 
-                    // Footer
-                    doc.setFontSize(8);
-                    doc.setTextColor(150, 150, 150);
-                    doc.text(`Generated by Blood Report AI | ${new Date().toLocaleString()}`, pageWidth / 2, pageHeight - 10, { align: 'center' });
+                    // ===== AI SYSTEM INFORMATION =====
+                    if (data.agent_execution) {
+                        addSectionHeader('AI SYSTEM INFORMATION');
+                        
+                        const metrics = [
+                            [`Total AI Agents`, `${data.agent_execution.total_agents}`],
+                            [`Successful Agents`, `${data.agent_execution.successful_agents}/${data.agent_execution.total_agents}`],
+                            [`Processing Time`, `${(data.processing_time * 1000).toFixed(0)}ms`],
+                            [`Total Tokens Used`, `${(data.agent_execution.total_tokens || 0).toLocaleString()}`]
+                        ];
+                        
+                        metrics.forEach(([label, value]) => {
+                            addText(`${label}: ${value}`, 10);
+                            addSpace(2);
+                        });
+                    }
 
-                    // Save PDF with error handling
+                    // ===== AI PROVIDER INFORMATION =====
+                    if (data.ai_attribution) {
+                        addSpace(4);
+                        addSectionHeader('AI ANALYSIS PROVIDERS');
+                        
+                        const providers = [
+                            ['Primary Provider', data.ai_attribution.primary_provider],
+                            ['Parameters Provider', data.ai_attribution.parameters_by],
+                            ['Interpretations Provider', data.ai_attribution.interpretations_by],
+                            ['Risks Provider', data.ai_attribution.risks_by],
+                            ['Recommendations Provider', data.ai_attribution.recommendations_by],
+                            ['Medicines Provider', data.ai_attribution.medicines_by],
+                            ['Prescriptions Provider', data.ai_attribution.prescriptions_by]
+                        ];
+                        
+                        providers.forEach(([label, provider]) => {
+                            if (provider) {
+                                addText(`${label}: ${provider}`, 9);
+                                addSpace(1);
+                            }
+                        });
+                    }
+
+                    // ===== FOOTER =====
+                    const pageCount = doc.internal.pages.length - 1;
+                    for (let i = 1; i <= pageCount; i++) {
+                        doc.setPage(i);
+                        doc.setDrawColor(200, 200, 200);
+                        doc.line(margin, pageHeight - 10, pageWidth - margin, pageHeight - 10);
+                        doc.setTextColor(150, 150, 150);
+                        doc.setFont('helvetica', 'normal');
+                        doc.setFontSize(8);
+                        const footerText = sanitizeText(`Generated by Blood Report AI | ${new Date().toLocaleString()} | Page ${i} of ${pageCount}`);
+                        doc.text(
+                            footerText,
+                            pageWidth / 2,
+                            pageHeight - 5,
+                            { align: 'center' }
+                        );
+                    }
+
+                    // Save PDF
                     const timestamp = new Date().toISOString().split('T')[0];
                     const filename = `Blood_Report_Analysis_${timestamp}.pdf`;
                     
@@ -3130,7 +3924,6 @@
                         alert('✅ Report downloaded successfully!');
                     } catch (saveError) {
                         console.error('❌ doc.save() failed:', saveError);
-                        // Fallback: try using blob approach
                         try {
                             const blob = doc.output('blob');
                             const url = URL.createObjectURL(blob);
@@ -3141,7 +3934,7 @@
                             link.click();
                             document.body.removeChild(link);
                             URL.revokeObjectURL(url);
-                            console.log('✅ PDF downloaded via blob fallback:', filename);
+                            console.log('✅ PDF downloaded via blob fallback');
                             alert('✅ Report downloaded successfully!');
                         } catch (blobError) {
                             console.error('❌ Blob fallback also failed:', blobError);
