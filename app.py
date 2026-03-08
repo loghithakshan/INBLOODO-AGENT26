@@ -28,11 +28,11 @@ def create_app():
         
         # Import and return the optimized API
         from src.api_optimized import app as fastapi_app
-        logger.info("✅ Successfully loaded FastAPI app from src.api_optimized")
+        logger.info("[OK] Successfully loaded FastAPI app from src.api_optimized")
         return fastapi_app
         
     except Exception as e:
-        print(f"⚠️  Error loading main API: {e}")
+        print(f"[WARNING] Error loading main API: {e}")
         import traceback
         traceback.print_exc()
         
@@ -61,18 +61,21 @@ app = create_app()
 if __name__ == "__main__":
     import uvicorn
     port = int(os.getenv("PORT", 8000))
-    print(f"\n{'='*70}")
-    print(f"🚀 INBLOODO AGENT - FastAPI Server")
-    print(f"{'='*70}")
-    print(f"🌐 Server: http://localhost:{port}")
-    print(f"📚 Docs:   http://localhost:{port}/docs")
-    print(f"🏥 Health: http://localhost:{port}/health")
-    print(f"{'='*70}\n")
+    print("\n" + "="*70)
+    print("[STARTUP] INBLOODO AGENT - FastAPI Server")
+    print("="*70)
+    print(f"[INFO] Server: http://localhost:{port}")
+    print(f"[INFO] Docs:   http://localhost:{port}/docs")
+    print(f"[INFO] Health: http://localhost:{port}/health")
+    print("="*70 + "\n")
     
     uvicorn.run(
         app,
         host="0.0.0.0",
         port=port,
+        reload=False,
+        log_level="info"
+    )
         reload=False,
         log_level="info"
     )
