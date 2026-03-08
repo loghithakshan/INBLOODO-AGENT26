@@ -56,20 +56,25 @@ from src.analysis.multi_ai_attribution import (
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# Cache numpy availability check at module level
+try:
+    import numpy as _np
+    _HAS_NUMPY = True
+except ImportError:
+    _np = None
+    _HAS_NUMPY = False
+
 
 class SafeJSONEncoder(json.JSONEncoder):
     """JSON encoder that safely converts non-serializable types."""
     def default(self, obj):
-        try:
-            import numpy as np
-            if isinstance(obj, (np.integer,)):
+        if _HAS_NUMPY:
+            if isinstance(obj, (_np.integer,)):
                 return int(obj)
-            if isinstance(obj, (np.floating,)):
+            if isinstance(obj, (_np.floating,)):
                 return float(obj)
-            if isinstance(obj, np.ndarray):
+            if isinstance(obj, _np.ndarray):
                 return obj.tolist()
-        except ImportError:
-            pass
         if isinstance(obj, datetime):
             return obj.isoformat()
         if hasattr(obj, '__float__'):
@@ -129,11 +134,18 @@ app.add_middleware(
 # Configure templates
 templates = Jinja2Templates(directory="templates")
 
-# Initialize parallel processor
-processor = ParallelProcessor(max_workers=4)
+# Initialize parallel processor with higher concurrency
+processor = ParallelProcessor(max_workers=8)
 
 # Pre-load orchestrator once
 _orchestrator_cache = {}
+
+# Pre-warm EasyOCR in background at startup
+try:
+    from src.input_parser.image_parser import prewarm_reader
+    prewarm_reader()
+except Exception:
+    pass
 
 
 def get_orchestrator() -> MultiAgentOrchestrator:
@@ -149,6 +161,25 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+@app.on_event("startup")
+async def startup_event():
+    """Pre-warm database and orchestrator at startup for faster first request."""
+    import asyncio
+    try:
+        # Pre-warm DB connection
+        with SessionLocal() as db:
+            db.execute(text("SELECT 1"))
+        logger.info("Database connection pre-warmed")
+    except Exception as e:
+        logger.warning(f"DB pre-warm failed: {e}")
+    
+    # Pre-warm orchestrator in background
+    def _init_orchestrator():
+        get_orchestrator()
+        logger.info("Orchestrator pre-warmed")
+    asyncio.get_event_loop().run_in_executor(None, _init_orchestrator)
 
 
 @app.get("/health")
@@ -583,10 +614,10 @@ async def analyze_report(
             import asyncio
             result_optimized: dict = await asyncio.wait_for(
                 process_medical_data_optimized(params, filename_for_report, db),
-                timeout=120.0  # Reduced from 180s - with parallelization this is enough
+                timeout=60.0  # 60s is plenty with parallel agents
             )
         except asyncio.TimeoutError:
-            logger.error(f"Analysis timed out after 120 seconds for {filename_for_report}")
+            logger.error(f"Analysis timed out after 60 seconds for {filename_for_report}")
             raise HTTPException(504, "Analysis taking longer than expected. Try uploading a clearer image.")
         
         # Add fallback notification if used

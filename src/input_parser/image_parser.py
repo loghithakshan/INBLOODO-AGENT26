@@ -21,31 +21,42 @@ except AttributeError:
 else:
     ssl._create_default_https_context = _create_unverified_https_context
 
-# Lazy initialization for EasyOCR reader
-# Don't load the model on import - only load when first needed
+# Lazy initialization for EasyOCR reader with background pre-warming
 _reader = None
 _reader_initialized = False
+_reader_lock = __import__('threading').Lock()
 
 def get_reader():
-    """Get or initialize EasyOCR reader lazily to save memory."""
+    """Get or initialize EasyOCR reader lazily (thread-safe)."""
     global _reader, _reader_initialized
     
     if _reader_initialized:
         return _reader
     
-    _reader_initialized = True
-    
-    try:
-        model_dir = os.path.join(os.getcwd(), "data", "easyocr_models")
-        os.makedirs(model_dir, exist_ok=True)
-        logger.info("Initializing EasyOCR reader (this may take a moment)...")
-        _reader = easyocr.Reader(['en'], gpu=False, model_storage_directory=model_dir)
-        logger.info("EasyOCR reader initialized successfully")
-        return _reader
-    except Exception as e:
-        logger.error(f"Failed to initialize EasyOCR reader: {str(e)}. OCR will be skipped.")
-        _reader = None
-        return None
+    with _reader_lock:
+        if _reader_initialized:  # Double-check after acquiring lock
+            return _reader
+        _reader_initialized = True
+        try:
+            model_dir = os.path.join(os.getcwd(), "data", "easyocr_models")
+            os.makedirs(model_dir, exist_ok=True)
+            logger.info("Initializing EasyOCR reader...")
+            _reader = easyocr.Reader(['en'], gpu=False, model_storage_directory=model_dir)
+            logger.info("EasyOCR reader initialized successfully")
+            return _reader
+        except Exception as e:
+            logger.error(f"Failed to initialize EasyOCR reader: {str(e)}. OCR will be skipped.")
+            _reader = None
+            return None
+
+
+def prewarm_reader():
+    """Pre-warm EasyOCR reader in background thread at startup."""
+    import threading
+    def _init():
+        get_reader()
+    threading.Thread(target=_init, daemon=True).start()
+    logger.info("EasyOCR pre-warm started in background")
 
 
 
@@ -72,9 +83,8 @@ def extract_text_from_image(upload_file: UploadFile, timeout_sec=30) -> str:
         if image.mode != 'RGB':
             image = image.convert('RGB')
 
-        # AGGRESSIVE DOWNSCALING: max 1200 pixels (was 2000) 
-        # This reduces processing time by ~60%
-        max_size = 1200
+        # AGGRESSIVE DOWNSCALING: max 1000 pixels for speed
+        max_size = 1000
         original_size = image.size
         if max(image.size) > max_size:
             ratio = max_size / max(image.size)
@@ -88,8 +98,8 @@ def extract_text_from_image(upload_file: UploadFile, timeout_sec=30) -> str:
         # Convert PIL image to numpy array for EasyOCR
         image_np = np.array(image)
 
-        # Extract text using EasyOCR
-        results = ocr_reader.readtext(image_np, detail=0)  # detail=0 returns only text
+        # Extract text using EasyOCR with batch_size=1 for lower memory
+        results = ocr_reader.readtext(image_np, detail=0, batch_size=4, paragraph=True)
 
         # Join all detected text
         text = ' '.join(results)
@@ -129,8 +139,8 @@ def extract_text_with_opencv(upload_file: UploadFile) -> str:
         # Read image with OpenCV
         image = cv2.imread(tmp_path)
         
-        # AGGRESSIVE DOWNSCALING: max 1200px (was 2000)
-        max_size = 1200
+        # AGGRESSIVE DOWNSCALING: max 1000px
+        max_size = 1000
         height, width = image.shape[:2]
         if max(height, width) > max_size:
             ratio = max_size / max(height, width)
@@ -148,8 +158,8 @@ def extract_text_with_opencv(upload_file: UploadFile) -> str:
         # Simple thresholding (faster)
         _, threshold = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY)
 
-        # Extract text using EasyOCR
-        results = ocr_reader.readtext(threshold, detail=0)
+        # Extract text using EasyOCR with paragraph mode
+        results = ocr_reader.readtext(threshold, detail=0, batch_size=4, paragraph=True)
         text = ' '.join(results)
         
         # Clean memory
@@ -180,8 +190,8 @@ def preprocess_image_advanced(image_path: str) -> list:
     if original.mode != 'RGB':
         original = original.convert('RGB')
 
-    # AGGRESSIVE DOWNSCALING to 1200px BEFORE creating versions
-    max_size = 1200
+    # AGGRESSIVE DOWNSCALING to 1000px BEFORE creating versions
+    max_size = 1000
     if max(original.size) > max_size:
         ratio = max_size / max(original.size)
         new_size = tuple(int(dim * ratio) for dim in original.size)
@@ -236,8 +246,8 @@ def extract_text_automated(upload_file: UploadFile) -> str:
                 # Convert to numpy array
                 img_np = np.array(img)
 
-                # Extract text with EasyOCR
-                results = ocr_reader.readtext(img_np, detail=0)
+                # Extract text with EasyOCR (paragraph mode for speed)
+                results = ocr_reader.readtext(img_np, detail=0, batch_size=4, paragraph=True)
                 text = ' '.join(results).strip()
 
                 # Score based on text length
@@ -246,8 +256,8 @@ def extract_text_automated(upload_file: UploadFile) -> str:
                 if score > 0:
                     logger.info(f"Version {i+1}: {score} chars")
 
-                    # EARLY EXIT: If we get 500+ characters, that's probably good enough
-                    if score > 500:
+                    # EARLY EXIT: If we get 300+ characters, that's probably good enough
+                    if score > 300:
                         best_text = text
                         logger.info(f"FAST: Good result found, exiting early")
                         break
