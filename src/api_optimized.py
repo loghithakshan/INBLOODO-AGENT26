@@ -140,12 +140,9 @@ processor = ParallelProcessor(max_workers=8)
 # Pre-load orchestrator once
 _orchestrator_cache = {}
 
-# Pre-warm EasyOCR in background at startup
-try:
-    from src.input_parser.image_parser import prewarm_reader
-    prewarm_reader()
-except Exception:
-    pass
+# VERCEL OPTIMIZATION: Removed module-level easyocr pre-warming
+# EasyOCR will be lazily loaded on first use via get_reader() in image_parser.py
+# This prevents cold-start timeouts on serverless platforms
 
 
 def get_orchestrator() -> MultiAgentOrchestrator:
@@ -165,21 +162,14 @@ def get_db():
 
 @app.on_event("startup")
 async def startup_event():
-    """Pre-warm database and orchestrator at startup for faster first request."""
-    import asyncio
-    try:
-        # Pre-warm DB connection
-        with SessionLocal() as db:
-            db.execute(text("SELECT 1"))
-        logger.info("Database connection pre-warmed")
-    except Exception as e:
-        logger.warning(f"DB pre-warm failed: {e}")
+    """Startup event - minimal initialization for Vercel serverless.
     
-    # Pre-warm orchestrator in background
-    def _init_orchestrator():
-        get_orchestrator()
-        logger.info("Orchestrator pre-warmed")
-    asyncio.get_event_loop().run_in_executor(None, _init_orchestrator)
+    VERCEL OPTIMIZATION: Deferred heavy initialization to on-demand.
+    - MultiAgentOrchestrator is lazily initialized on first API call via get_orchestrator()
+    - EasyOCR is lazily loaded on first image upload via get_reader()
+    - Database connections are created as needed via SessionLocal()
+    """
+    logger.info("FastAPI app started successfully (lazy initialization mode)")
 
 
 @app.get("/health")

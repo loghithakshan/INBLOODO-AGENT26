@@ -1,4 +1,3 @@
-import easyocr
 from PIL import Image, ImageFilter, ImageEnhance
 import tempfile
 import os
@@ -27,7 +26,11 @@ _reader_initialized = False
 _reader_lock = __import__('threading').Lock()
 
 def get_reader():
-    """Get or initialize EasyOCR reader lazily (thread-safe)."""
+    """Get or initialize EasyOCR reader lazily (thread-safe).
+    
+    This function defers the heavy easyocr import until it's actually needed.
+    This is critical for Vercel serverless deployments to avoid cold-start timeouts.
+    """
     global _reader, _reader_initialized
     
     if _reader_initialized:
@@ -38,6 +41,9 @@ def get_reader():
             return _reader
         _reader_initialized = True
         try:
+            # Import easyocr only when needed, not at module load time
+            import easyocr
+            
             model_dir = os.path.join(os.getcwd(), "data", "easyocr_models")
             os.makedirs(model_dir, exist_ok=True)
             logger.info("Initializing EasyOCR reader...")

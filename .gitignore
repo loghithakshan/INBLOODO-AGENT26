@@ -71,3 +71,5 @@ reports/
 
 # Archive
 _archive/
+.vercel
+.env*.local

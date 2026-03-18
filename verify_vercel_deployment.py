@@ -16,14 +16,26 @@ def check_deployment_readiness():
     print("[VERCEL] DEPLOYMENT VERIFICATION")
     print("="*70 + "\n")
     
+    valid_entrypoints = [
+        "app.py",
+        "index.py",
+        "server.py",
+        "src/app.py",
+        "src/index.py",
+        "src/server.py",
+        "app/app.py",
+        "app/index.py",
+        "app/server.py",
+    ]
+
     checks = {
+        "[OK] FastAPI entrypoint present": any(os.path.exists(p) for p in valid_entrypoints),
         "[OK] Root FastAPI entrypoint": os.path.exists("app.py"),
-        "[OK] Alternative API entrypoint": os.path.exists("api/index.py"),
-        "[OK] Project configuration": os.path.exists("pyproject.toml"),
-        "[OK] Vercel config": os.path.exists("vercel.json"),
-        "[OK] Vercel ignore file": os.path.exists(".vercelignore"),
         "[OK] Requirements file": os.path.exists("requirements.txt"),
         "[OK] Main API module": os.path.exists("src/api_optimized.py"),
+        "[OK] Vercel config (optional)": os.path.exists("vercel.json"),
+        "[OK] Vercel ignore file (recommended)": os.path.exists(".vercelignore"),
+        "[OK] pyproject.toml script config (optional)": os.path.exists("pyproject.toml"),
         "[OK] Environment file": os.path.exists(".env") or os.path.exists(".env.example"),
     }
     
@@ -38,29 +50,33 @@ def check_deployment_readiness():
     print("[CONFIG] CONTENT VERIFICATION")
     print("="*70 + "\n")
     
-    # Check vercel.json
-    try:
-        with open("vercel.json", "r") as f:
-            vercel_config = json.load(f)
-        print(f"[OK] vercel.json is valid JSON")
-        print(f"   Framework: {vercel_config.get('framework')}")
-        print(f"   Build Command: {vercel_config.get('buildCommand')}")
-        print(f"   Python Runtime: {vercel_config.get('env', {}).get('PYTHON_VERSION')}")
-    except Exception as e:
-        print(f"[ERROR] Error reading vercel.json: {e}")
-        all_passed = False
+    # Check vercel.json (optional)
+    if os.path.exists("vercel.json"):
+        try:
+            with open("vercel.json", "r") as f:
+                vercel_config = json.load(f)
+            print(f"[OK] vercel.json is valid JSON")
+            print(f"   Build Command: {vercel_config.get('buildCommand')}")
+        except Exception as e:
+            print(f"[ERROR] Error reading vercel.json: {e}")
+            all_passed = False
+    else:
+        print("[INFO] vercel.json not found (zero-config deployment is supported)")
     
-    # Check pyproject.toml
-    try:
-        with open("pyproject.toml", "r") as f:
-            content = f.read()
-        if "fastapi" in content and 'app = "app:app"' in content:
-            print(f"[OK] pyproject.toml has FastAPI and correct app reference")
-        else:
-            print(f"[WARN] pyproject.toml may be missing FastAPI or app reference")
-    except Exception as e:
-        print(f"[ERROR] Error reading pyproject.toml: {e}")
-        all_passed = False
+    # Check pyproject.toml (optional)
+    if os.path.exists("pyproject.toml"):
+        try:
+            with open("pyproject.toml", "r") as f:
+                content = f.read()
+            if 'app = "app:app"' in content:
+                print(f"[OK] pyproject.toml has app script mapping")
+            else:
+                print(f"[WARN] pyproject.toml exists but has no app script mapping")
+        except Exception as e:
+            print(f"[ERROR] Error reading pyproject.toml: {e}")
+            all_passed = False
+    else:
+        print("[INFO] pyproject.toml not found (not required for standard entrypoints)")
     
     # Check app.py
     try:
