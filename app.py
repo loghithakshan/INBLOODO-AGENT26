@@ -11,42 +11,51 @@ project_root = Path(__file__).parent
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
-# Setup environment and logging
-from dotenv import load_dotenv
-load_dotenv()
+def create_app():
+    """Create and return the FastAPI application"""
+    try:
+        # Load environment variables
+        from dotenv import load_dotenv
+        load_dotenv()
+        
+        import logging
+        logging.basicConfig(level=logging.INFO)
+        logger = logging.getLogger(__name__)
+        
+        # Create necessary directories
+        Path("data/uploads").mkdir(parents=True, exist_ok=True)
+        Path("logs").mkdir(parents=True, exist_ok=True)
+        
+        # Import and return the optimized API
+        from src.api_optimized import app as fastapi_app
+        logger.info("[OK] Successfully loaded FastAPI app from src.api_optimized")
+        return fastapi_app
+        
+    except Exception as e:
+        print(f"[WARNING] Error loading main API: {e}")
+        import traceback
+        traceback.print_exc()
+        
+        # Return fallback app if main app fails
+        from fastapi import FastAPI
+        app = FastAPI(
+            title="INBLOODO AGENT",
+            version="2.0.0",
+            description="Blood Report AI Analysis System"
+        )
+        
+        @app.get("/")
+        def read_root():
+            return {"status": "running", "mode": "fallback", "error": str(e)}
+        
+        @app.get("/health")
+        def health_check():
+            return {"status": "operational", "version": "2.0.0"}
+        
+        return app
 
-import logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-# Create necessary directories
-Path("data/uploads").mkdir(parents=True, exist_ok=True)
-Path("logs").mkdir(parents=True, exist_ok=True)
-
-# Import and export the app directly from src.api_optimized
-try:
-    from src.api_optimized import app
-    logger.info("[OK] Successfully loaded FastAPI app from src.api_optimized")
-except Exception as e:
-    logger.error(f"[ERROR] Failed to import src.api_optimized: {e}")
-    import traceback
-    traceback.print_exc()
-    
-    # Fallback app if import fails
-    from fastapi import FastAPI
-    app = FastAPI(
-        title="INBLOODO AGENT",
-        version="2.0.0",
-        description="Blood Report AI Analysis System"
-    )
-    
-    @app.get("/")
-    def read_root():
-        return {"status": "running", "mode": "fallback", "error": str(e)}
-    
-    @app.get("/health")
-    def health_check():
-        return {"status": "operational", "version": "2.0.0"}
+# Create the app at module level for Vercel
+app = create_app()
 
 # During development, run with uvicorn
 if __name__ == "__main__":
