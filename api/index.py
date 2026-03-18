@@ -1,16 +1,12 @@
 """
-Vercel Serverless Function Handler for FastAPI
-This is the standard Vercel Python entrypoint for FastAPI apps
+Vercel Python Serverless Function
+App variable must be available at module level for Vercel
 """
-import os
 import sys
 from pathlib import Path
 
-# Add project root to path
+# Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-# Initialize app  
+# Import app from root app.py
 from app import app
-
-# Export for Vercel serverless
-__all__ = ['app']
