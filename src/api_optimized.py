@@ -25,7 +25,6 @@ from fastapi.middleware.gzip import GZipMiddleware
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from sqlalchemy import text, func
-import jwt # Add for simple session management if needed, but we'll use simple tokens for now
 
 from src.database.models import SessionLocal, Report
 from src.input_parser.pdf_parser import extract_text_from_pdf

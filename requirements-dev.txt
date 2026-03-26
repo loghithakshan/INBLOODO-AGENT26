@@ -1,0 +1,4 @@
+# Development dependencies (not needed for production)
+pytest
+email-validator
+aiofiles

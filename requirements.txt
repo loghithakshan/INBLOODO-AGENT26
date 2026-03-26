@@ -9,14 +9,11 @@ pymupdf
 sqlalchemy
 scikit-learn
 joblib
-pytest
 jinja2
 python-dotenv
 psutil
-aiofiles
 easyocr
 requests
-fpdf
 reportlab
 psycopg2-binary
 google-generativeai
@@ -24,5 +21,3 @@ openai
 anthropic
 openai-agents
 bcrypt
-pyjwt
-email-validator
